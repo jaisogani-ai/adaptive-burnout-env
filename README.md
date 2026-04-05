@@ -4,14 +4,14 @@
 
 ### AI-Powered Reinforcement Learning Environment for Human Wellbeing
 
-![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![OpenEnv](https://img.shields.io/badge/OpenEnv-Framework-FF6B6B?style=for-the-badge&logo=meta&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![Gemini AI](https://img.shields.io/badge/Gemini_AI-2.0_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Hackathon](https://img.shields.io/badge/Meta_OpenEnv-Hackathon_2026-FF4500?style=for-the-badge)
 
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![OpenEnv](https://img.shields.io/badge/OpenEnv-Framework-FF6B6B?style=for-the-badge)](https://github.com/meta-pytorch/OpenEnv)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Gemini AI](https://img.shields.io/badge/Gemini_AI-2.0_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Hackathon 2026](https://img.shields.io/badge/Meta_OpenEnv-Hackathon_2026-FF4500?style=for-the-badge)](https://github.com/meta-pytorch/OpenEnv)
 ---
 
 **A research-grade reinforcement learning environment that simulates the complex dynamics of human productivity, energy management, and burnout — where AI agents learn that sustainable performance beats short-term grinding.**
