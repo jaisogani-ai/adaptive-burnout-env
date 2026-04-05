@@ -422,7 +422,3 @@ all copies or substantial portions of the Software.
 *Teaching AI that sustainable performance beats short-term grinding.*
 
 </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> e95651d4d7a7c6c53d154d7d4f0fc2618bf229f2
