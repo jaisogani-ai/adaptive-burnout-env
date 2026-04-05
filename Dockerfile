@@ -1,7 +1,16 @@
-FROM python:3.11-slim
+FROM python:3.11-slim=
+
 WORKDIR /app
+
+# Copy requirements first for better Docker layer caching
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application
 COPY . .
-EXPOSE 8000
-CMD ["python", "server.py"]
+
+EXPOSE 7860
+
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "7860"]
+
