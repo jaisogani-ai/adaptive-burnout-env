@@ -417,8 +417,5 @@ all copies or substantial portions of the Software.
 
 <div align="center">
 
-**Built with 💡 for the Meta OpenEnv Hackathon 2026**
-
-*Teaching AI that sustainable performance beats short-term grinding.*
-
+**Focused on building AI systems that prioritize sustainable productivity over burnout**
 </div>
