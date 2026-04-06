@@ -23,5 +23,5 @@ COPY --chown=user . .
 
 EXPOSE 7860
 
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["bash", "-c", "python app.py & sleep 5 && uvicorn server:app --host 0.0.0.0 --port 8000"]
 
