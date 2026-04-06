@@ -74,7 +74,9 @@ class BurnoutEnvironment(Environment):
 # CREATE APP
 # -------------------------
 app = create_app(BurnoutEnvironment, BurnoutAction, BurnoutObservation, env_name="burnout_env")
-
+@app.get("/")
+def home():
+    return {"message": "Adaptive Burnout Environment Running"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
