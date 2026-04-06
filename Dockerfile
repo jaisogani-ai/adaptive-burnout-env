@@ -21,7 +21,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # THEN copy the rest of the code
 COPY --chown=user . .
 
-EXPOSE 7860
+EXPOSE 8000
+EXPOSE 7860 
 
-CMD ["bash", "-c", "python app.py & sleep 5 && uvicorn server:app --host 0.0.0.0 --port 8000"]
+CMD ["python", "app.py"]
 
