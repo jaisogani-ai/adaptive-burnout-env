@@ -7,6 +7,44 @@ OpenEnv-compatible RL Environment
 
 import random
 import numpy as np
+from pydantic import BaseModel, Field
+
+# =========================================================================
+# OPENENV SCHEMAS
+# =========================================================================
+class Observation(BaseModel):
+    """Pydantic model representing environment observation per OpenEnv standard"""
+    energy: float = Field(..., ge=0.0, le=1.0)
+    stress: float = Field(..., ge=0.0, le=1.0)
+    motivation: float = Field(..., ge=0.0, le=1.0)
+    progress: float = Field(..., ge=0.0, le=1.0)
+
+    # Legacy syntax compatibility (app.py and grader.py expect indexing/copying)
+    def __getitem__(self, item: int) -> float:
+        return [self.energy, self.stress, self.motivation, self.progress][item]
+        
+    def copy(self):
+        """Support numpy .copy() used by grader"""
+        return Observation(
+            energy=self.energy, stress=self.stress, 
+            motivation=self.motivation, progress=self.progress
+        )
+
+class StepResult(BaseModel):
+    """Full step return payload"""
+    observation: Observation
+    reward: float
+    done: bool
+    info: dict
+
+# Define discrete Action Space schema representation
+ActionSpace = {
+    0: "study",
+    1: "rest", 
+    2: "exercise",
+    3: "social",
+    4: "work_hard"
+}
 
 
 class ProductivityEnvironment:
@@ -37,13 +75,20 @@ class ProductivityEnvironment:
         return self._get_state()
 
     # -------------------------
-    # GET STATE
+    # GET STATE (Standardized)
     # -------------------------
-    def _get_state(self):
-        return np.array(
-            [self.energy, self.stress, self.motivation, self.progress],
-            dtype=np.float32,
+    def state(self) -> Observation:
+        """OpenEnv compliant state getter"""
+        return Observation(
+            energy=self.energy,
+            stress=self.stress,
+            motivation=self.motivation,
+            progress=self.progress
         )
+
+    def _get_state(self) -> Observation:
+        """Legacy internal wrapper"""
+        return self.state()
 
     # -------------------------
     # APPLY ACTION EFFECTS
@@ -231,4 +276,7 @@ class ProductivityEnvironment:
             "action_history": self.action_history
         }
 
-        return self._get_state(), float(reward), done, info
+        # Return OpenEnv format natively (App.py safely unpacks the tuple, grader uses it)
+        # Note: step() intentionally returns a tuple (obs, reward, done, info) to remain functionally valid 
+        # for gym and app.py unpacks while obs is strongly typed.
+        return self.state(), float(reward), done, info
