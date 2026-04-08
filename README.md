@@ -11,7 +11,7 @@
 [![Gemini AI](https://img.shields.io/badge/Gemini_AI-2.0_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Hackathon 2026](https://img.shields.io/badge/Meta_OpenEnv-Hackathon_2026-FF4500?style=for-the-badge)](https://github.com/meta-pytorch/OpenEnv)
+
 ---
 
 **A research-grade reinforcement learning environment that simulates the complex dynamics of human productivity, energy management, and burnout — where AI agents learn that sustainable performance beats short-term grinding.**
@@ -26,7 +26,7 @@
 
 ![Demo](demo.gif)
 
-</div>
+<div>
 
 <table align="center">
 <tr>
@@ -35,7 +35,7 @@
 <td align="center"><b>🎯 3 Difficulty Levels</b><br>Easy · Medium · Hard<br>Trajectory Grading</td>
 <td align="center"><b>🤖 Gemini AI Powered</b><br>LLM Decisions +<br>Rule-Based Fallback</td>
 </tr>
-</table>
+</table>/
 
 ---
 
