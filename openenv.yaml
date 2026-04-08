@@ -2,50 +2,44 @@ name: "Adaptive AI Productivity Engine"
 version: "2.0.0"
 author: "jai"
 description: "A continuous productivity simulation environment designed to model human state dynamics (Energy, Stress, Motivation) balancing long-term progress metrics."
+entrypoint: "environment:ProductivityEnv"
 
-# Defining schemas and capabilities
 capabilities:
   deterministic: true
   action_space: "discrete"
   observation_space: "pydantic"
+  reward_space: "pydantic"
 
-# Define discrete Action Space
 action_space:
   type: int
   min: 0
   max: 4
-  mapping:
-    0: "study"
-    1: "rest"
-    2: "exercise"
-    3: "social"
-    4: "work_hard"
 
-# Define Observation Space
 observation_space:
   type: object
   structure:
-    energy: float # scale: 0.0 to 1.0
-    stress: float # scale: 0.0 to 1.0
-    motivation: float # scale: 0.0 to 1.0
-    progress: float # scale: 0.0 to 1.0
+    energy: float
+    stress: float
+    motivation: float
+    progress: float
 
-# OpenEnv Defined Standard Tasks
+reward_space:
+  type: float
+  min: 0.0
+  max: 1.0
+
 tasks:
-  task_easy:
-    description: "Basic progression. Requires simple maintenance of progress > 0.8."
-    env_kwargs: 
-      difficulty: "easy"
+  - id: "easy"
+    description: "Basic progression."
     evaluation: "grader.py:grade_easy"
+    deterministic: true
   
-  task_medium:
-    description: "Progress and stress balance. Requires progress > 0.8 while keeping stress < 0.6."
-    env_kwargs:
-      difficulty: "medium"
+  - id: "medium"
+    description: "Progress and stress balance."
     evaluation: "grader.py:grade_medium"
+    deterministic: true
 
-  task_hard:
-    description: "Optimal productivity. Requires progress > 0.9 while strictly maintaining stress below 0.85 without ever hitting burnout threshold."
-    env_kwargs:
-      difficulty: "hard"
+  - id: "hard"
+    description: "Optimal productivity."
     evaluation: "grader.py:grade_hard"
+    deterministic: true
