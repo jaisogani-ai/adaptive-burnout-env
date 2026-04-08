@@ -1,82 +1,79 @@
 """
-server.py
-OpenEnv server entrypoint.
-Wraps ProductivityEnvironment for OpenEnv compatibility.
+server.py — OpenEnv API + Gradio UI on the same port (7860).
+Premium dark theme is applied via mount_gradio_app() parameters.
 """
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+from environment import ProductivityEnv, Action
+import uvicorn
+import gradio as gr
 
-from typing import Any, Optional
-from uuid import uuid4
-from openenv.core.env_server.http_server import create_app
-from openenv.core.env_server.interfaces import Environment
-from openenv.core.env_server.types import Action, Observation, State
-from environment import ProductivityEnvironment
-
-
-# -------------------------
-# CUSTOM ACTION MODEL
-# -------------------------
-class BurnoutAction(Action):
-    """Action for the Burnout environment (0-4)"""
-    action: int = 0
+# =========================================================================
+# FASTAPI APP WITH OPENENV ENDPOINTS
+# =========================================================================
+api = FastAPI(title="Adaptive AI Productivity Engine", version="2.0.0")
+env = ProductivityEnv()
 
 
-# -------------------------
-# CUSTOM OBSERVATION MODEL
-# -------------------------
-class BurnoutObservation(Observation):
-    """Observation returned by the Burnout environment"""
-    energy: float = 0.0
-    stress: float = 0.0
-    motivation: float = 0.0
-    progress: float = 0.0
+@api.get("/api/health")
+def health():
+    return {"status": "ok", "env": "productivity-burnout-env"}
 
 
-# -------------------------
-# OPENENV WRAPPER
-# -------------------------
-class BurnoutEnvironment(Environment):
-    """Wraps ProductivityEnvironment for OpenEnv compatibility"""
-
-    def __init__(self):
-        super().__init__()
-        self.env = ProductivityEnvironment()
-        self._state = State(episode_id=str(uuid4()), step_count=0)
-
-    def reset(self, seed=None, episode_id=None, **kwargs):
-        """Reset environment, return initial observation"""
-        state_array = self.env.reset()
-        self._state = State(episode_id=episode_id or str(uuid4()), step_count=0)
-        return BurnoutObservation(
-            energy=float(state_array[0]),
-            stress=float(state_array[1]),
-            motivation=float(state_array[2]),
-            progress=float(state_array[3]),
-            done=False, reward=0.0)
-
-    def step(self, action: BurnoutAction, **kwargs):
-        """Execute action, return observation"""
-        state_array, reward, done, info = self.env.step(action.action)
-        self._state.step_count += 1
-        return BurnoutObservation(
-            energy=float(state_array[0]),
-            stress=float(state_array[1]),
-            motivation=float(state_array[2]),
-            progress=float(state_array[3]),
-            done=done, reward=reward, metadata=info)
-
-    @property
-    def state(self):
-        """Return current environment state"""
-        return self._state
+@api.post("/reset")
+@api.get("/reset")
+def reset():
+    obs = env.reset()
+    return JSONResponse(content=dict(obs))
 
 
-# -------------------------
-# CREATE APP
-# -------------------------
-app = create_app(BurnoutEnvironment, BurnoutAction, BurnoutObservation, env_name="burnout_env")
-@app.get("/")
-def home():
-    return {"message": "Adaptive Burnout Environment Running"}
+@api.post("/step")
+def step(action: Action):
+    obs, reward, done, info = env.step(action.action)
+    return JSONResponse(content={
+        "observation": dict(obs),
+        "reward": float(reward),
+        "done": done,
+        "info": {k: v for k, v in info.items() if k != "action_history"}
+    })
+
+
+@api.get("/state")
+def state():
+    return JSONResponse(content=dict(env.state()))
+
+
+@api.get("/info")
+def info():
+    return {
+        "name": "Adaptive AI Productivity Engine",
+        "version": "2.0.0",
+        "action_space": {"type": "int", "min": 0, "max": 4},
+        "observation_space": {
+            "type": "object",
+            "fields": ["energy", "stress", "motivation", "progress"]
+        }
+    }
+
+
+# =========================================================================
+# MOUNT GRADIO UI AT ROOT / WITH PREMIUM DARK THEME
+# =========================================================================
+from app import demo as gradio_app, premium_css, THEME_JS, dark_theme
+
+app = gr.mount_gradio_app(
+    api,
+    gradio_app,
+    path="/",
+    theme=dark_theme,
+    css=premium_css,
+    js=THEME_JS,
+    footer_links=[]
+)
+
+
+# =========================================================================
+# ENTRYPOINT
+# =========================================================================
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=7860)
